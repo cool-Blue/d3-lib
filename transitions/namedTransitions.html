@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        div {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+<div id="viz">test div</div>
+<div id="viz2">test div</div>
+
+<script src="d3 CB.js"></script>
+<script>
+    var ns = "trans1",
+        div = d3.select("body").select("#viz"),
+        div2 = d3.select("body").select("#viz2");
+    div.on("mouseover", function() {
+        div
+        .transition(ns).duration(3000)
+            .style("background-color", "green")
+            .each("interrupt", int)
+        div2
+        .transition(ns+"1").duration(3000)
+        .style("background-color", "green")
+        .each("interrupt", int)
+    })
+    .on("mouseout", function() {
+        div
+        .transition(ns).duration(3000)
+            .style("background-color", "red")
+            .each("interrupt", int)
+        div2
+        .transition(ns).duration(3000)
+        .style("background-color", "red")
+        .each("interrupt", int)
+    })
+    .on("click", function() {
+        div.transition(ns).duration(0)
+        div2.transition(ns+"1").duration(0)
+                .each("start", function() {
+                    console.log("div2 start")
+                })
+    })
+function int (){
+    console.log("interrupted")
+}
+</script>
+</body>
+</html>

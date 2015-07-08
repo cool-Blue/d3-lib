@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style type="text/css">
+    svg {
+      position: absolute;
+    }
+
+    body {
+      white-space: pre;
+      font: 12px Courier;
+    }
+  </style>
+</head>
+<body>
+  <a href="fullsize.png">results for Chrome version: 43.0.2357.124</a><br />
+  <script src="get browser info.js"></script>
+  <script type="text/javascript">
+    var ns = "http://www.w3.org/2000/svg",
+        svg = document.body.appendChild(setAttributes(document.createElementNS(ns, "svg"),
+          { height: "320", width: "400" }));
+
+    draw("textPath", svg);
+
+    document.writeln(get_browser_info());
+    write(document, "querySelector", "textPath"); // fail
+    write(document, "querySelector", "textpath"); // fail
+    writeAll(document, "querySelectorAll", "textPath"); // fail
+    writeAll(document, "querySelectorAll", "textpath"); // fail
+    writeAll(document, "getElementsByTagName", "textPath"); // success!
+    writeAll(document, "getElementsByTagName", "textpath"); // fail
+
+    write(svg, "querySelector", "textPath"); // fail
+    write(svg, "querySelector", "textpath"); // fail
+    writeAll(svg, "querySelectorAll", "textPath"); // fail
+    writeAll(svg, "querySelectorAll", "textpath"); // fail
+    writeAll(svg, "getElementsByTagName", "textPath"); // success!
+    writeAll(svg, "getElementsByTagName", "textpath"); // fail
+
+    writeAll(svg, "querySelectorAll", "*"); // success!
+
+    draw("textpath", svg);
+
+    function write(element, method, selector) {
+      var result = element[method](selector);
+      document.write(element + " " + method + "(" + selector + "): ");
+      if (result) document.write(result); else document.write("FAIL");
+      document.writeln("");
+    }
+
+    function writeAll(element, method, selector) {
+      var results = element[method](selector),
+          i = -1,
+          n = results.length;
+      document.write(element + " " + method + "(" + selector + "): ");
+      if (n) {
+        while (++i < n) {
+          document.write(results[i]);
+          if (i < n - 1) document.write(", ");
+        }
+      } else document.write("FAIL");
+      document.writeln("");
+    }
+    function draw(tp, svg) {
+      var indx = svg.getElementsByTagName("g").length,
+          dx = indx * 200, p1 = [-100, 0], p2 = [100, 0],
+          group = svg.appendChild(setAttributes(document.createElementNS(ns, "g"),
+            { transform: "translate(" + (100 + dx) + ",300)" })),
+          path = group.appendChild(setAttributes(document.createElementNS(ns, "path"),
+            { id: "myPath" + indx, d: "M" + p1 + " A100,70 0 0,1 " + p2, fill: "none", stroke: "black", })),
+          tpLabel = group.appendChild(setAttributes(document.createElementNS(ns, "text"), { "text-anchor": "middle", dy: -20 })),
+          text = group.appendChild(setAttributes(document.createElementNS(ns, "text"), { dy: 20 })),
+          testTp = text.appendChild(setAttributes(document.createElementNS(ns, tp),
+            { id: "testTextPath", "xlink:href": "#myPath" + indx, startOffset: 100, }));
+      testTp.textContent = tp;
+      tpLabel.textContent = tp;
+    }
+  </script>
+
+</body>
+</html>
