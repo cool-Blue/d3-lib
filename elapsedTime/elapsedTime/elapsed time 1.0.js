@@ -85,7 +85,7 @@
 		}
 		elapsedTime.AveLap = function (aveWindow) {
 			var _i = 0, _aveP = 0, _history = [];
-			this.AveLap.window = aveWindow = aveWindow || this.AveLap.window
+			this.AveLap.window = aveWindow || this.AveLap.window
 			return function (this_lap) {
 				this_lap = this_lap || this.lap().lastLap
 				if (!this.AveLap.window) return _aveP = _i++ ? (_aveP + this_lap / (_i - 1)) * (_i - 1) / _i : this.lap().lastLap;
@@ -121,14 +121,15 @@
 			return 'time elapsed : ' + d3.format(",.3f")(value)
 				+ ' sec\t' + d3.format(",d")(this.ticks)
 		});
-		elapsedTime.stop = function (value) {
+		elapsedTime.stop = function () {
 			this.running = false
 			return this
 		}
-		elapsedTime.timestamp = function (message) {
+		elapsedTime.timestamp = function (caller, message) {
 			if (this.consoleOn) {
+				var _caller = (caller && caller.callee) ? /function\s+(\w*)\(/.exec(caller.callee)[1] : caller ;
 				this.mark(function (t) {
-					console.log(d3.format(" >8,.6f")(t / 1000) + (message ? "\t" + message : ""))
+					console.log(d3.format(" >8,.6f")(t / 1000) + (_caller ? "\t" + _caller + (message ? "\t" + message : "") : ""))
 				})
 			}
 		}
