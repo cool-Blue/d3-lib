@@ -104,28 +104,40 @@ filters.inset = function drop(svg, color, opacity){
 	return "url(#" + id + ")"
 }
 
-filters.sphere = function drop(svg, baseColor, highlightColor) {
-	// filters go in defs element
-	var id = "filter-spherical-shading",
-			defs = svg.selectAll("defs").data([id]);
+filters.sphere = function (svg, baseColor, opacity, highlightColor) {
+	baseColor = baseColor || "black";
+	opacity = opacity || 1;
+	highlightColor = highlightColor || "white";
+	var id = "filter-spherical-shading" + ["", baseColor, highlightColor].join("-"),
+			defs = svg.selectAll("defs").data([id]),
+			c = tinycolor(baseColor).toHsv(),
+			stop1 = tinycolor({h: c.h, s: c.s, v: c.v}),
+			stop2 = tinycolor({h: (c.h == 0) ? 0 : (c.h + 60)%360, s: c.s, v: c.v*0.65});
+
 	defs.enter().append("defs");
 	var sphere = defs.append("radialGradient")
 		.attr({"id": id, "cx": "50%", "cy": "50%", "r": "80%", "fx": "25%", "fy": "25%",});
 	sphere.append("stop")
-			.attr({"offset": "0%", "stop-color": highlightColor || "white"})
+		.attr({"offset": "0", "stop-color": highlightColor || "white"})
 	sphere.append("stop")
-			.attr({"offset": "75%", "stop-color": baseColor || "black"})
-	return "url(#" + id + ")"
+		.attr({"offset": "0.5", "stop-color": stop1.toHexString(), opacity: opacity})
+	sphere.append("stop")
+		.attr({"offset": "1", "stop-color": stop2.toHexString(), opacity: 0.75*opacity})
+	//sphere.append("stop")
+	//		.attr({"offset": "0%", "stop-color": highlightColor || "white"})
+	//sphere.append("stop")
+	//		.attr({"offset": "75%", "stop-color": baseColor || "black"})
+	return ["url(#", id, ")"].join("");
 }
-filters.bubble = function drop(svg, baseColor, opacity, highlightColor) {
+filters.bubble = function (svg, baseColor, opacity, highlightColor) {
 	baseColor = baseColor || "black";
 	opacity = opacity || 0.3;
 	highlightColor = highlightColor || "white";
-	var id = "filter-bubble-" + baseColor + "_" + highlightColor,
+	var id = "filter-bubble-" + baseColor + "-" + highlightColor,
 			defs = svg.selectAll("defs").data([id]),
 			c = tinycolor(baseColor).toHsv(),
 			stop1 = tinycolor({h: c.h, s: 100, v: 1}),
-			stop2 = tinycolor({h: (c.h == 0) ? 0 : (c.h + 60)%360, s: 100, v: 0.75});
+			stop2 = tinycolor({h: (c.h == 0) ? 0 : (c.h + 60)%360, s: 100, v: 0.65});
 
 	defs.enter().append("defs");
 	var sphere = defs.selectAll(".bubble").data([baseColor], function(d){return d}).enter()
