@@ -1,4 +1,6 @@
-﻿var ElapsedTime = (function (d3) {
+﻿// <script src="https://gitcdn.xyz/repo/cool-Blue/40e550b1507cca31b0bb/raw/b83ceb0f8b4a2b6256f079f5887fc5243baedd4f/elapsed%2520time%25201.0.js"></script>
+
+var ElapsedTime = (function (d3) {
 	(function(){
 		//polly-fill for safari
 		if ("performance" in window == false) {
