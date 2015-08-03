@@ -9,50 +9,7 @@
 			_message = function (v) { return typeof v != "undefined" ? v : _textContent },
 			_fmt = " >7,d";
 
-	//immutable, public class interface
-	//copied to each instance, this is not shared code!
-	//return Object.create((Output.prototype = Object.defineProperties({
-	//	update: function (message) {
-	//		/*.apply(this, arguments) is an anti-pattern that kills optimisation (leaks argument)*/
-	//		var args = new Array(arguments.length);
-	//		for (var i = 0; i < args.length ; ++i) args[i] = arguments[i];
-  //
-	//		_div.text(_tagText + (_tagText ? ": " : "")
-	//							+ ((message ? (typeof message === "function" ? message : _message) : _message))
-	//								.apply(this, args));
-	//		return this;
-	//	},
-	//	tagText: function (text) {
-	//		return text ? (_tagText = text, this) : _tagText;
-	//	},
-	//	text: function (text) {
-	//		if (!typeof text === "undefined") _div.text(_textContent = text ? text : _nullText); return this;
-	//		return _textContent;
-	//	},
-	//	message: function (m) {
-	//		_message = function () {
-	//			/*.apply(this, arguments) is an anti-pattern that kills optimisation (leaks argument)*/
-	//			var args = new Array(arguments.length);
-	//			for (var i = 0; i < args.length ; ++i) args[i] = arguments[i];
-  //
-	//			return d3.functor(m).apply(this, args)
-	//		};
-	//		return this;
-	//	},
-	//	f: function f(x) {
-	//		return Array.isArray(x) ? x.map(f) : d3.format(_fmt)(parseInt(x));
-	//	},
-	//	format: function (f) {
-	//		return f ? (_fmt = f, this) : _fmt;
-	//	},
-	//	base: d3.select(container).node(),
-	//}, {//properties with special requirements
-	//	tag: {
-	//		get: function () {
-	//			return tag_getter.call(this, _tagText)
-	//		}
-	//	},
-	//})));
+
 	return Object.create(Output.prototype = Object.defineProperties({
 		update: function (message) {
 			/*.apply(this, arguments) is an anti-pattern that kills optimisation (leaks argument)*/
