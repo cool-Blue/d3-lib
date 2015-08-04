@@ -75,7 +75,7 @@ if(!outputs) var outputs = {};
 	outputs.ElapsedTime = function(on, style, before) {
 		var elapsedTime = OutputDiv()(on, style, before).update("loading...");
 		elapsedTime.start = function(aveWindow) {
-			this.aveLap = this.AveLap(aveWindow || 1000)
+			this.aveLap = _AveLap.call(this, aveWindow || 1000)
 			this.startTime = window.performance.now()
 			this.lapTime = this.startTime
 			this.ticks = 0
@@ -83,30 +83,13 @@ if(!outputs) var outputs = {};
 			this.running = true
 			return this
 		}
-		elapsedTime.lap = function() {
-			if(this.running) {
+		elapsedTime.lap = function () {
+			if (this.running) {
 				this.lastLap = (window.performance.now() - this.lapTime) / 1000
 				this.lapTime = window.performance.now()
 			}
 			return this
 		}
-		elapsedTime.AveLap = function(aveWindow) {
-			var _i = 0, _aveP = 0, _history = [];
-			this.AveLap.window = aveWindow || this.AveLap.window
-			return function(this_lap) {
-				this_lap = this_lap || this.lap().lastLap
-				if(!this.AveLap.window) return _aveP = _i++ ? (_aveP + this_lap / (_i - 1)) * (_i - 1)
-				/ _i : this.lap().lastLap;
-				if(this_lap) _history.push(this_lap);
-				for(; _history.length > this.AveLap.window;) {
-					_history.shift()
-				}
-				return _history.reduce(function(ave, t, i, h) {
-					return ave + t / h.length
-				}, 0)
-			}
-		}
-		elapsedTime.AveLap.window = null
 		elapsedTime.t = function() {
 			return d3.format(" >8,.3f")((window.performance.now() - this.startTime) / 1000)
 		}
@@ -144,6 +127,27 @@ if(!outputs) var outputs = {};
 		}
 		elapsedTime.consoleOn = false;
 		return elapsedTime;
+
+		function _AveLap(aveWindow) {
+			var _i = 0, _aveP = 0, _history = [], _aveWindow = aveWindow || 1000;
+			function f(this_lap) {
+				this_lap = this_lap || this.lap().lastLap
+				if(!_aveWindow) return _aveP = _i++ ? (_aveP + this_lap / (_i - 1)) * (_i - 1)
+				/ _i : this.lap().lastLap;
+				if(this_lap) _history.push(this_lap);
+				for(; _history.length > _aveWindow;) {
+					_history.shift()
+				}
+				return _history.reduce(function(ave, t, i, h) {
+					return ave + t / h.length
+				}, 0)
+			};
+			Object.defineProperties(f, {
+				history:{get: function() {return _history}},
+				aveWindow:{get: function() {return _aveWindow}, set: function(w) {_aveWindow = w}}
+			})
+			return f
+		}
 	}
 })(d3);
 
