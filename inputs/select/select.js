@@ -1,7 +1,13 @@
-/**
- * Created by Admin on 8/07/2015.
- */
 (function() {
+	// Example
+	//		isoLines = d3.ui.select({
+	//			base: inputs, onUpdate: update,
+	//			data: [{text: "show lines", value: "#ccc"}, {text: "hide lines", value: "none"}]
+	//		}),
+	//
+	//		.style("stroke", isoLines.value());
+	//
+
 	d3.ui = d3.ui || {};
 	d3.ui.select = function (options) {
 		// add a select element on base with options matching data
@@ -27,7 +33,7 @@
 			}
 		});
 	}
-	//experiment wiuth chaining...
+	//experiment with chaining...
 	d3.ui.select2 = function (base){
 		var _base, _on, _onUpdate, _data;
 		function select(){}
