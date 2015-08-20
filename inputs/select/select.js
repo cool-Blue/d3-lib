@@ -18,7 +18,7 @@
 		// 	otherwise the data elements must have text and value fields
 		//
 		var base = (options.base ? (options.base.append ? options.base : d3.select(options.base))
-															: "body")
+															: d3.select("body"))
 			.append("select")
 			.on(options.on || "input", options.onUpdate)  // bind the listener to the outer element
 			.selectAll("option")
