@@ -1,7 +1,10 @@
 (function() {
 	// Example
+	// <script src="https://gitcdn.xyz/repo/cool-Blue/d3-lib/master/inputs/select/select.js"></script>
+	//
 	//		isoLines = d3.ui.select({
-	//			base: inputs, onUpdate: update,
+	//			base: inputs,
+	// 			onUpdate: update,
 	//			data: [{text: "show lines", value: "#ccc"}, {text: "hide lines", value: "none"}]
 	//		}),
 	//
@@ -14,7 +17,8 @@
 		// if the text and value is the same then data is scalar array
 		// 	otherwise the data elements must have text and value fields
 		//
-		var base = (options.base.append ? options.base : d3.select(options.base))
+		var base = (options.base ? (options.base.append ? options.base : d3.select(options.base))
+															: "body")
 			.append("select")
 			.on(options.on || "input", options.onUpdate)  // bind the listener to the outer element
 			.selectAll("option")

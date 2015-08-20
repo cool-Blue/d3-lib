@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Path Translations</title>
+
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+	<div id="line-chart"></div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+	<script src="data-generator.js"></script>
+	<script src="line-chart.js"></script>
+	<script>
+
+		// get data generator for 2 series
+		var dataGenerator =
+			DataGenerator
+				.numberOfSeries(2)
+				.startTimestampAt(new Date(2015, 0, 1).getTime())
+				.generate(0, 10);
+
+		// get data
+		var data = dataGenerator.get();
+
+		// get line chart
+		var lineChart =
+			LineChart
+				.config({
+					id: '#line-chart'
+				});
+
+		var updateChart = function() {
+			lineChart
+				.data(data)
+				.draw(function() {
+
+					// shift to left by one position
+					data = dataGenerator.shiftToLeft(1).get();
+
+					updateChart();
+
+				});
+		};
+
+		updateChart();
+
+	</script>
+
+</body>
+</html>
