@@ -12,26 +12,27 @@
 	//
 
 	d3.ui = d3.ui || {};
-	d3.ui.select = function (options) {
+	d3.ui.select = function (config) {
 		// add a select element on base with options matching data
 		// if the text and value is the same then data is scalar array
 		// 	otherwise the data elements must have text and value fields
 		//
-		var base = (options.base ? (options.base.append ? options.base : d3.select(options.base))
+		var select = (config.base ? (config.base.append ? config.base : d3.select(config.base))
 															: d3.select("body"))
-			.append("select")
-			.on(options.on || "input", options.onUpdate)  // bind the listener to the outer element
-			.selectAll("option")
-			.data(options.data);
-		base.enter().append("option");
-		base.exit().remove();
-		return base.attr("value", function (d) {
+					[config.before ? "insert": "append"]("select", config.before ? config.before : null)
+					.on(config.on || "input", config.onUpdate)  // bind the listener to the outer element
+					.data([config.data]),
+				options = select.selectAll("option").data(function(d){return d});
+		options.enter().append("option");
+		options.exit().remove();
+		if(config.style) select.style(config.style);
+		return options.attr("value", function (d) {
 			return d.value || d;
 		}).text(function (d) {
 			return d.text || d
 		})
 		.call(function () { //add a custom property to the final selection
-			if (options.hook) options.hook();
+			if (config.hook) config.hook();
 			this.value = function () {
 				return this[0].parentNode.value
 			}
