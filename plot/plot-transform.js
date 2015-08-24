@@ -20,7 +20,6 @@ function transflip(){
 }
 /**
  *
- * @param axis
  * @param tickSize
  * @returns {tickSize}
  */
@@ -34,9 +33,20 @@ function tickSize(tickSize){
 }
 /**
  * Axis constructor that returns custom behaviour on d3.svg.axis
+ *
  */
-function d3Axis(){
-	var axis = d3.svg.axis()
+function d3TransfAxis(){
+	var axis = d3.svg.axis();
+	function transAxis(g){
+		g.call(axis).selectAll(".tick text, .tick line").attr(transflip())
+		if(d3.select(g.node()).classed("x")) g.selectAll(".domain").attr(transflip());
+	}
 	axis.tickSize = tickSize.bind(axis);
-	return axis
+	d3.rebind.bind(null, transAxis, axis).apply(null, Object.keys(axis))
+	return transAxis;
+}
+function d3Axis(){
+	var axis = d3.svg.axis();
+	axis.tickSize = tickSize.bind(axis);
+	return axis;
 }
