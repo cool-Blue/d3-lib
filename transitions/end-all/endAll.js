@@ -1,4 +1,4 @@
-function endall(transition, callback) {
+function endAll(transition, callback) {
 	var n = 0;
 	transition
 		.each(function() { ++n; })
