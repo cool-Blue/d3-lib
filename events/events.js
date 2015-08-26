@@ -12,5 +12,5 @@
 function bindevents(context, source, target, events){
 	// events
 	// rebind on and all of the events as methods on fdg
-	return d3.rebind.bind(context, source, target, "on").apply(context, events);
+	return d3.rebind.bind(context, target, source, "on").apply(context, events);
 }
