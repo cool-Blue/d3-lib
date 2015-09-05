@@ -1,4 +1,22 @@
 if(!inputs) var inputs = (function() {
+    function button(selection, config, host) {
+        // build an array of buttons on selection based on the structure of the config array
+        return (selection.select ? selection : d3.select(selection))
+            .selectAll("button")
+            .data(config).enter().append("button")
+            .attr("class", "g-button")
+            // hook the events
+            .each(function(config) {
+                hookEvents.call(this, config)
+                // set the initial value
+                this.value = config.value;
+                d3.select(this).classed("g-active", config.value);
+            })
+            .text(function(d) {
+                return d.label;
+            });
+    };
+
 	function toggle(selection, config, host) {
 		// build an array of toggle buttons on selection based on the structure of the config array
 		return (selection.select ? selection : d3.select(selection))
@@ -73,7 +91,8 @@ if(!inputs) var inputs = (function() {
 	}
 
 	return {
-		toggle: toggle,
+		button: button,
+        toggle: toggle,
 		number: number
 	}
 	function IDp(p, def) {

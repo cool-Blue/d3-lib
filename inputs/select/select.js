@@ -1,4 +1,4 @@
-(function() {
+(function(d3) {
 	// Example
 	// <script src="https://gitcdn.xyz/repo/cool-Blue/d3-lib/master/inputs/select/select.js"></script>
 	//

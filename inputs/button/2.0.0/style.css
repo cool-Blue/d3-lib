@@ -47,8 +47,9 @@
     line-height: 1.3em;
     margin: 4px -1px 4px 0;
     padding: 7px 0;
+    padding: 0 0.5em 0 0.5em;
     position: relative;
-    width: 96px;
+    /*width: 96px;*/
 }
 
 .g-button:first-child {
