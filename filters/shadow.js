@@ -183,3 +183,39 @@ filters.bubble = function (svg, baseColor, opacity, highlightColor) {
 		.attr({"offset": "1", "stop-color": stop2.toHexString(), opacity: 0.75*opacity})
 	return "url(#" + id + ")"
 }
+filters.cSphere = function(ctx, x, y, radius, baseColor, highlightColor) {
+    // Coloured radial gradient in circle shape
+
+    baseColor = baseColor || "black";
+    highlightColor = highlightColor || "white";
+
+    var c = tinycolor(baseColor).toHsv(),
+        stop1 = tinycolor({h: c.h, s: c.s, v: c.v * 0.6}),
+        stop2 = tinycolor({
+            h: c.h,
+            s: c.s,
+            v: c.v * 0.01 //0.65
+        });
+
+    var startAngle = 0;
+    var endAngle = Math.PI * 2;
+    var antiClockwise = false;
+
+    var radialGradient = ctx.createRadialGradient(
+        -0.5 * radius + x, -0.5 * radius + y,
+        .0 * radius,
+        x, y, 1.5 * radius
+    );
+    radialGradient.addColorStop(0, highlightColor);
+    radialGradient.addColorStop(0.6, stop1.toHexString());
+    radialGradient.addColorStop(0.9, stop2.toHexString());
+    radialGradient.addColorStop(1, stop2.toHexString());
+
+    ctx.fillStyle = radialGradient;
+
+    ctx.beginPath();
+    ctx.arc(x, y, radius, startAngle, endAngle);
+    ctx.closePath();
+
+    ctx.fill();
+}
