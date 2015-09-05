@@ -190,7 +190,7 @@ filters.cSphere = function(ctx, x, y, radius, baseColor, highlightColor) {
     highlightColor = highlightColor || "white";
 
     var c = tinycolor(baseColor).toHsv(),
-        stop1 = tinycolor({h: c.h, s: c.s, v: c.v * 0.6}),
+        stop1 = tinycolor({h: c.h, s: 255, v: c.v * 0.6}),
         stop2 = tinycolor({
             h: c.h,
             s: c.s,
