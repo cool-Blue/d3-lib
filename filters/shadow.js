@@ -219,3 +219,25 @@ filters.cSphere = function(ctx, x, y, radius, baseColor, highlightColor) {
 
     ctx.fill();
 }
+filters.makeSpriteSheet =  function makeSpriteSheet(radius, colors){
+    var padding = 2, cell = 2 * radius + padding,
+        canvas = d3.select(document.createElement("canvas"))
+            .attr({width: cell * colors.length, height: cell})
+            .node(),
+        context = canvas.getContext('2d'),
+
+        sheet = new PIXI.BaseTexture.fromCanvas(
+            colors.reduce(
+                function(ctx, c, i) {
+                    return (filters.cSphere(ctx, cell * i + cell / 2, cell
+                        / 2, radius, c), ctx);
+                },
+                context).canvas
+        );
+
+    return function(index) {
+        return new PIXI.Texture(sheet,
+            new PIXI.Rectangle(index * cell, 0, cell, canvas.height)
+        )
+    };
+}

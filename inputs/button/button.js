@@ -36,6 +36,7 @@ if(!inputs) var inputs = (function() {
 				// hard-wire the toggle behaviour
 				d3.event.stopPropagation();
 				d3.select(this).classed("g-active", (d.value = (+d.value + 1) % 2));
+                selection.call(updateGroup, d);
 				// then process hooks
 				d.on.click.apply(this, arguments)
 			});
@@ -89,6 +90,13 @@ if(!inputs) var inputs = (function() {
 
 		});
 	}
+    function updateGroup(selection, source){
+        if(source.value && source.group)
+        // if grouped, dissable currently selected group sibling
+            selection.each(function(b){
+                d3.select(this).classed("g-active", !(b != source && b.group == source.group))
+            });
+    }
 
 	return {
 		button: button,
