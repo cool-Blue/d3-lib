@@ -41,7 +41,7 @@
                     // process hooks
                     d.on.click.apply(this, arguments)
                     // then hard-wire the toggle behaviour
-                    d3.event.stopPropagation();
+                    //d3.event.stopPropagation();
                     d3.select(this).classed("g-active", (d.value = (+d.value + 1) % 2));
                     console.log([d.label, d.value].join("\t"));
                     selection.selectAll("button").call(updateGroup, d);
