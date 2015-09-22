@@ -221,12 +221,12 @@ filters.cSphere = function(ctx, x, y, radius, baseColor, highlightColor) {
 }
 filters.makeSpriteSheet =  function makeSpriteSheet(radius, colors){
     var padding = 2, cell = 2 * radius + padding,
-        canvas = d3.select(document.createElement("canvas"))
-            .attr({width: cell * colors.length, height: cell})
-            .node(),
-        context = canvas.getContext('2d'),
+        canvas = document.createElement("canvas"),
+        context = canvas.getContext('2d');
+    canvas.width = cell * colors.length;
+    canvas.height = cell;
 
-        sheet = new PIXI.BaseTexture.fromCanvas(
+    var sheet = new PIXI.BaseTexture.fromCanvas(
             colors.reduce(
                 function(ctx, c, i) {
                     return (filters.cSphere(ctx, cell * i + cell / 2, cell
@@ -234,6 +234,7 @@ filters.makeSpriteSheet =  function makeSpriteSheet(radius, colors){
                 },
                 context).canvas
         );
+
 
     return function(index) {
         return new PIXI.Texture(sheet,
