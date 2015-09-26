@@ -2,7 +2,7 @@
 
     d3.ui = d3.ui || {};
 
-    d3.ui.fpsmeter = function Histogram(on, style, config) {
+    d3.ui.FpsMeter = function Histogram(on, style, config) {
     var hist = d3.select(on).append("div")
             .style({
                 "background-color": 'rgba(207,203,196,0.1)',
