@@ -11,7 +11,7 @@
             })
             .attr("id", "histogram")
             .append("svg")
-            .style(merge({display: "inline-block"}, style))
+            .style(merge({display: "inline-block", overflow: "visible"}, style))
             .attr(config),
         plot = hist.append("g")
             .attr(transplot(config.height))
