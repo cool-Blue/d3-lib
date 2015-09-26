@@ -14,8 +14,21 @@
             .style(merge({display: "inline-block", overflow: "visible"}, style))
             .attr(config),
         plot = hist.append("g")
-            .attr(transplot(config.height))
-            .attr({"fill": "none", stroke: 'rgba(207,203,196,0.3)'});
+            .attr(transplot(config.height)),
+        xG = hist.append("g")
+            .attr("id", "x-axis-g")
+            .attr({"fill": "none", stroke: 'rgba(207,203,196,0.3)',
+            "transform": "translate(0," + config.height + ")"}),
+
+        defs = hist.append("defs"),
+        gradient = defs.append("linearGradient")
+                .attr({id: "xColor", x1: "0%",  y1: "0%", x2: "100%", y2: "0%"});
+        gradient.append("stop")
+                .attr({"offset": "0%", "stop-color": "red", "stop-opacity": "0.5"});
+        gradient.append("stop")
+                .attr({"offset": "50%", "stop-color": "orange", "stop-opacity": "0.5"});
+        gradient.append("stop")
+                .attr({"offset": "100%", "stop-color": "green", "stop-opacity": "0.8"});
 
     function update(data) {
         if (!data || !data.length) return;
@@ -25,7 +38,7 @@
             h = makeHist(data, config.values, x),
             xAxis = d3.svg.axis()
                 .scale(x)
-                .orient("top")
+                .orient("bottom")
                 .tickFormat("")
                 .ticks(3)
                 .tickSize(config.tickSize || 3),
@@ -49,7 +62,8 @@
             .attr("x", function(d){
                 return x(d.x)
             });
-        plot.call(xAxis);
+        xG.call(xAxis);
+        xG.selectAll(".domain").attr({"fill": "url(#xColor)", opacity: 0.6})
     }
 
     return update;
