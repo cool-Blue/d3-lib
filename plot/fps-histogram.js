@@ -24,9 +24,9 @@
         gradient = defs.append("linearGradient")
                 .attr({id: "xColor", x1: "0%",  y1: "0%", x2: "100%", y2: "0%"});
         gradient.append("stop")
-                .attr({"offset": "0%", "stop-color": "red", "stop-opacity": "0.5"});
+                .attr({"offset": "0%", "stop-color": "red", "stop-opacity": "0.8"});
         gradient.append("stop")
-                .attr({"offset": "50%", "stop-color": "orange", "stop-opacity": "0.5"});
+                .attr({"offset": "50%", "stop-color": "orange", "stop-opacity": "1"});
         gradient.append("stop")
                 .attr({"offset": "100%", "stop-color": "green", "stop-opacity": "0.8"});
 
