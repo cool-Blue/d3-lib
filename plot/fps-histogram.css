@@ -3,3 +3,11 @@
 #x-axis-stroke .tick:last-of-type {
     stroke: none;
 }
+
+#histogram rect{
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    -o-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+}
+
