@@ -5,7 +5,7 @@
     d3.ui.FpsMeter = function Histogram(on, style, config) {
         var BINS = 100;
         var _style   = merge({
-                "background-color": 'black',
+                "background-color": 'rgba(207,203,196,0.1)',
                 display: "inline-block",
                 margin: "0 0 0 6px"
             }, style),
@@ -13,16 +13,11 @@
                 .style(_style)
                 .attr("id", "histogram")
                 .append("svg")
-                .style(merge({display: "inline-block", overflow: "visible"}, style))
-                .attr(config),
-            fill     = hist.append("rect")
-                .attr({
-                    height: config.height,
-                    width: config.width,
-                    fill: "url(#xColor)"
-                }),
+                .style({display: "inline-block", overflow: "visible", margin: 0})
+                .attr(merge({fill: "url(#xColor)"}, config)),
             plot     = hist.append("g")
-            /*.attr(transplot(config.height))*/,
+                .attr(transplot(config.height))
+                .attr({"fill": "url(#xColor)"}),
             xAxis    = d3.svg.axis()
                 .orient("bottom")
                 .tickFormat("")
@@ -37,7 +32,10 @@
 
             defs     = hist.append("defs"),
             gradient = defs.append("linearGradient")
-                .attr({id: "xColor", x1: "0%", y1: "0%", x2: "100%", y2: "0%"});
+                .attr({
+                    id: "xColor", x1: "0%", y1: "0%", x2: "100%", y2: "0%",
+                    gradientUnits: "userSpaceOnUse"
+                });
         gradient.append("stop")
             .attr({"offset": "0%", "stop-color": "red", "stop-opacity": "0.5"});
         gradient.append("stop")
@@ -55,12 +53,12 @@
                 h    = makeHist(data, config.values, x),
                 y    = d3.scale.linear()
                     .domain([0, d3.max(h, function(d) {return d.y})])
-                    .range([config.height, 0]),
+                    .range([0, config.height]),
                 bars = plot.selectAll(".bar").data(h);
 
             bars.enter().append("rect")
                 .attr("class", "bar")
-                .style({fill: _style["background-color"], stroke: "none"});
+                .attr({opactity: 1});
 
             bars.exit().remove();
 
@@ -75,7 +73,8 @@
                 });
             xAxis.scale(x);
             xG.call(xAxis);
-            xG.selectAll(".domain").attr({"fill": "url(#xColor)"})
+            xG.selectAll(".domain")
+                .attr({"fill": "url(#xColor)"})
         }
 
         return update;
