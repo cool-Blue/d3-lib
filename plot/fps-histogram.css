@@ -1,0 +1,5 @@
+#x-axis-stroke .domain,
+#x-axis-stroke .tick:first-of-type,
+#x-axis-stroke .tick:last-of-type {
+    stroke: none;
+}

@@ -3,9 +3,9 @@
     d3.ui = d3.ui || {};
 
     d3.ui.FpsMeter = function Histogram(on, style, config) {
-        var BINS = 100;
+        var BINS = 60;
         var _style   = merge({
-                "background-color": 'rgba(207,203,196,0.1)',
+                "background-color": 'black',
                 display: "inline-block",
                 margin: "0 0 0 6px"
             }, style),
@@ -17,17 +17,26 @@
                 .attr(merge({fill: "url(#xColor)"}, config)),
             plot     = hist.append("g")
                 .attr(transplot(config.height))
+                .classed("plot", true)
                 .attr({"fill": "url(#xColor)"}),
             xAxis    = d3.svg.axis()
                 .orient("bottom")
                 .tickFormat("")
                 .ticks(3)
                 .tickSize(config.tickSize || 3),
-            xG       = hist.append("g")
-                .attr("id", "x-axis-g")
+            xG = hist.append("g")
                 .attr({
-                    "fill": "none", stroke: 'rgba(207,203,196,0.3)',
                     "transform": "translate(0," + config.height + ")"
+                })
+            xFill = xG.append("g")
+                .attr("id", "x-axis-fill")
+                .attr({
+                    "fill": "url(#xColor)", stroke: 'none'
+                }),
+            xLines = xG.append("g")
+                .attr("id", "x-axis-stroke")
+                .attr({
+                    "fill": "none", stroke: _style["background-color"]//'rgba(207,203,196,0.8)'
                 }),
 
             defs     = hist.append("defs"),
@@ -37,11 +46,11 @@
                     gradientUnits: "userSpaceOnUse"
                 });
         gradient.append("stop")
-            .attr({"offset": "0%", "stop-color": "red", "stop-opacity": "0.5"});
+            .attr({"offset": "0%", "stop-color": "red"});
         gradient.append("stop")
-            .attr({"offset": "50%", "stop-color": "orange", "stop-opacity": "0.5"});
+            .attr({"offset": "50%", "stop-color": "orange"});
         gradient.append("stop")
-            .attr({"offset": "100%", "stop-color": "green", "stop-opacity": "0.5"});
+            .attr({"offset": "100%", "stop-color": "green"});
 
         update(d3.range(BINS));
 
@@ -72,9 +81,8 @@
                     return x(d.x)
                 });
             xAxis.scale(x);
-            xG.call(xAxis);
-            xG.selectAll(".domain")
-                .attr({"fill": "url(#xColor)"})
+            xFill.call(xAxis);
+            xLines.call(xAxis);
         }
 
         return update;
