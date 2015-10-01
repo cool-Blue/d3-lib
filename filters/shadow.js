@@ -281,7 +281,7 @@ filters.Marker = function(svg, color){
     defs.enter().append("defs");
     var markers = defs.selectAll("#"+id).data([
         {
-            attr: {id: idS, style: 'viewBox: "0 0 7 7";',
+            attr: {id: idS, viewBox: "0 0 7 7",
                 markerWidth: "7", markerHeight: "7",
                 refX: "4", refY: "4",orient: "auto"},
             symbol: {
@@ -290,7 +290,7 @@ filters.Marker = function(svg, color){
             }
         },
         {
-            attr: {id: idE, style: 'viewBox: "0 0 13 13"',
+            attr: {id: idE, viewBox: "0 0 13 13",
                 markerWidth: "13", markerHeight: "13",
                 refX: "2", refY: "7", orient: "auto"},
             symbol: {
