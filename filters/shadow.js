@@ -242,3 +242,77 @@ filters.makeSpriteSheet =  function makeSpriteSheet(radius, colors){
         )
     };
 }
+filters.FlatShade = function (svg, dirn, _baseColor) {
+    var baseColor = _baseColor || "black",
+        opacity = 1,
+        highlightColor = "white",
+        id = "filter-flat-shading" + ["", baseColor, highlightColor].join("-").replace("#",""),
+        defs = svg.selectAll("defs").data([id]),
+        c = tinycolor(baseColor).toHsv(),
+        stop0 = tinycolor({h: c.h, s: c.s*0.4, v: 90}),
+        stop1 = tinycolor({h: c.h, s: c.s, v: c.v}),
+        stop2 = tinycolor({h: c.h, s: 100, v: c.v*0.4}),
+        orientation =  dirn.reduce(function(o, p, i){return (o[["x1","y1","x2","y2"][i]] = dirn[i], o)}, {});
+
+    defs.enter().append("defs");
+    var gradient = defs.selectAll("#"+id).data([[
+            {"offset": "0", "stop-color": stop0.toHexString()},
+            {"offset": "0.5", "stop-color": stop1.toHexString(), opacity: opacity},
+            {"offset": "1", "stop-color": stop2.toHexString(), opacity: 0.75*opacity}
+        ]]);
+    gradient.enter().append("linearGradient").attr({"id": id});
+    var stops = gradient.selectAll("stop").data(function(d){return d});
+    stops.enter().append("stop");
+    stops.each(function(d){d3.select(this).attr(d)});
+    gradient
+        .attr(orientation);
+    return ["url(#", id, ")"].join("");
+
+    function merge(source, target) {
+        for(var p in source) if(target && !target.hasOwnProperty(p)) target[p] = source[p];
+        return target;
+    }
+
+}
+filters.Marker = function(svg, color){
+    var id = "filter-marker", defs = svg.selectAll("defs").data([id]),
+        idS = id + "-start", idE = id + "-end";
+
+    defs.enter().append("defs");
+    var markers = defs.selectAll("#"+id).data([
+        {
+            attr: {id: idS, style: 'viewBox: "0 0 7 7";',
+                markerWidth: "7", markerHeight: "7",
+                refX: "4", refY: "4",orient: "auto"},
+            symbol: {
+                type: "rect",
+                attr: {x: "1", y: "1", width: "5", height: "5", style: "stroke: none; fill: " + color + ";"}
+            }
+        },
+        {
+            attr: {id: idE, style: 'viewBox: "0 0 13 13"',
+                markerWidth: "13", markerHeight: "13",
+                refX: "2", refY: "7", orient: "auto"},
+            symbol: {
+                type: "path",
+                attr:{d: "M2,2 L2,13 L8,7 L2,2", style: "stroke: none; fill: " + color + ";"}
+            }
+        }
+        ]);
+    markers.enter().append("marker")
+        .each(function(d){
+            return d3.select(this).attr(d.attr)
+        });
+    var marker = markers.selectAll(".symbol").data(function(d){return [d.symbol]});
+    marker.enter().append(function(d) {
+        return document.createElement(d.type)
+    })
+        .each(function(d){
+            return d3.select(this).attr(d.attr)
+        });
+
+    return {
+        start: ["url(#", idS, ")"].join(""),
+        end: ["url(#", idE, ")"].join("")
+    }
+};
