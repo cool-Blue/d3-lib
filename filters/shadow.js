@@ -305,7 +305,7 @@ filters.Marker = function(svg, color){
         });
     var marker = markers.selectAll(".symbol").data(function(d){return [d.symbol]});
     marker.enter().append(function(d) {
-        return document.createElement(d.type)
+        return document.createElementNS("http://www.w3.org/2000/svg", d.type)
     })
         .each(function(d){
             return d3.select(this).attr(d.attr)
