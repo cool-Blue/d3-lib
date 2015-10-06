@@ -40,26 +40,61 @@
 
     function tickSubdivide(n) {
         var axis = this, scale = axis.scale(),
-            tickLabels = scale.ticks;
+            tickLabels = scale.ticks,
+            ε = 1e-6;
 
         function coolAxis(selection) {
-            selection.call(axis);
             selection.each(function(){
-                var g = d3.select(this), t = tickLabels(),
-                    minorTicks = g.selectAll(".tick.minor")
-                        .data(scale.ticks(axis.ticks()[0] * n), function(d) { return d; });
-                minorTicks.enter().insert("g", ".domain").attr("class", "tick minor")
-                    .attr({
-                        "transform": function(d) {return "translate(0," + scale(d) + ")"}
-                    })
-                    .append("line")
+                d3.select(this).selectAll(".tick.minor").remove()
+            });
+            selection.call(axis);
+            // use each and reselect to allow for transition objects as well as selections
+            selection.each(function() {
+                var g = d3.select(this);
+                var minorTicks = g.selectAll(".tick")
+                        .data(scale.ticks(axis.ticks()[0] * n), scale)
+                    enter = minorTicks.enter().insert("g", ".domain")
+                        .attr({
+                            class: "tick minor",
+                            transform: function(d) {return "translate(0," + scale(d) + ")"}
+                        })
+                        .style("opacity", ε)
+                    exit = d3.transition(minorTicks.exit())
+                        .style("opacity", ε).remove()
+                    update = d3.transition(minorTicks.order())
+                        .style("opacity", 1)
+                enter.append("line")
                     .transition("minor")
                     .attr({
                         "y2": 0,
                         "x2": -3
-                    });
-                minorTicks.exit().remove();
-            })
+                    })
+            });
+
+            function tlog(trans, type, message){
+                var data = Array(trans[0].length).join("_").split("");
+                console.log(padRight(message, 12) + (trans.each(function(d, i){
+                    data[i] = d;
+                }), data.map(f).join(" ")));
+                if(trans.duration && type) {
+                    type = Array.isArray(type) ? type : [type];
+                    type.forEach(function(t) {
+                        trans.each(t, function(d, i, j) {
+                            var tag = d3.select(this);
+                            console.log([t, "on", tag.attr("class") || tag.property("tagName"), "x", trans.size()].join(" "))
+                        })
+                    })
+                }
+                function f(x){
+                    var l = 8;
+                    return x == null || x == undefined || x == "_" ? Array(l+1).join(".") : d3.format("_>"+l+"d")(x);
+                }
+                function padRight(s, l){
+                    l = l || 8;
+                    var len = s.length;
+                    return s + Array(l - len).join("_");
+                }
+            }
         }
 
         return d3.rebind.bind(null, coolAxis, axis).apply(null, Object.keys(axis));
