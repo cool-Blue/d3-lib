@@ -44,25 +44,44 @@
             ε = 1e-6;
 
         function coolAxis(selection) {
+            var scale0 = this.__chart__ || axis.scale();
+            var minorTickValues = [];
             selection.each(function(){
-                d3.select(this).selectAll(".tick.minor").remove()
+                d3.select(this).selectAll(".tick.minor").each(function(d, i){
+                    minorTickValues.push(d);
+                }).remove()
             });
+            console.log(minorTickValues.map(f).join(""))
             selection.call(axis);
             // use each and reselect to allow for transition objects as well as selections
             selection.each(function() {
                 var g = d3.select(this);
-                var minorTicks = g.selectAll(".tick")
-                        .data(scale.ticks(axis.ticks()[0] * n), scale)
-                    enter = minorTicks.enter().insert("g", ".domain")
+                g.selectAll(".tick.minor").data(minorTickValues)
+                    .enter().insert("g", ".domain")
+                    .attr({
+                        class: "tick minor",
+                        transform: function(d) {return "translate(0," + scale0(d) + ")"}
+                    }).append("line")
+                    .attr({
+                        "y2": 0,
+                        "x2": -3
+                    });
+
+                var ticks = g.selectAll(".tick")
+                        .data(scale.copy().ticks(axis.ticks()[0] * n), scale),
+                    enter = ticks.enter().insert("g", ".domain")
                         .attr({
-                            class: "tick minor",
-                            transform: function(d) {return "translate(0," + scale(d) + ")"}
+                            class: "tick minor"
                         })
-                        .style("opacity", ε)
-                    exit = d3.transition(minorTicks.exit())
-                        .style("opacity", ε).remove()
-                    update = d3.transition(minorTicks.order())
-                        .style("opacity", 1)
+                        .style("opacity", ε),
+                    exit = d3.transition(ticks.exit())
+                        .style("opacity", ε).remove(),
+                    update = d3.transition(ticks.order())
+                        .style("opacity", 1);
+                d3.transition(enter)
+                    .attr({
+                        transform: function(d) {return "translate(0," + scale(d) + ")"}
+                    })
                 enter.append("line")
                     .transition("minor")
                     .attr({
@@ -85,15 +104,15 @@
                         })
                     })
                 }
-                function f(x){
-                    var l = 8;
-                    return x == null || x == undefined || x == "_" ? Array(l+1).join(".") : d3.format("_>"+l+"d")(x);
-                }
-                function padRight(s, l){
-                    l = l || 8;
-                    var len = s.length;
-                    return s + Array(l - len).join("_");
-                }
+            }
+            function f(x){
+                var l = 8;
+                return x == null || x == undefined || x == "_" ? Array(l+1).join(".") : d3.format("_>"+l+"d")(x);
+            }
+            function padRight(s, l){
+                l = l || 8;
+                var len = s.length;
+                return s + Array(l - len).join("_");
             }
         }
 
