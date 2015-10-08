@@ -41,7 +41,7 @@
         function hookEvents() {
             // store the DOM element
             var _control = this;
-            // the bound data is the config object for the control
+            // config object for the control
             // parse the keys and bind a listener to any key beginning with "on"
             Object.keys(config).filter(function(k) {
                 return k.slice(0, 2) == "on";

@@ -44,9 +44,9 @@
             ε = 1e-6;
 
         function coolAxis(selection) {
-            var scale0 = this.__chart__ || axis.scale();
-            var minorTickValues = [];
+            var minorTickValues = [], scale0;
             selection.each(function(){
+                scale0 = this.__chart__ || axis.scale();
                 d3.select(this).selectAll(".tick.minor").each(function(d, i){
                     minorTickValues.push(d);
                 }).remove()
