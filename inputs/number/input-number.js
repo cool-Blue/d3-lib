@@ -25,8 +25,8 @@
         if(config.events){
             if(config.events.uniform)
                 s.each(function(){
-                    var n = d3.select(this);
-                    Object.keys(config.events.uniform).forEach(function(e, i, events){
+                    var n = d3.select(this), events = config.events.uniform;
+                    Object.keys(config.events.uniform).forEach(function(e, i){
                         n.on(e, events[e])
                     })
                 });
