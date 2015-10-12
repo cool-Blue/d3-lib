@@ -27,7 +27,10 @@
             transition
                 .each(function() { ++n; })
                 .each("end.endAll", function() { if(!--n) callbackNS(this, arguments, group); })
-                .each("interrupt.endAll", function() { console.log("interruption") });
+                .each("interrupt.endAll", function() {
+                    if(!--n) callbackNS(this, arguments, group);
+                    console.log("interruption")
+                });
             if(transition.empty()) callback();
         }
     }

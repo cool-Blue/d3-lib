@@ -41,7 +41,7 @@
         return function(){
             var values = [];
             s.each(function(){
-                values.push(d3.select(this).property("value") * 1000);
+                values.push(d3.select(this).property("value"));
             });
             return  values;
         }
