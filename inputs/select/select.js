@@ -33,7 +33,7 @@
         options.enter().append("option");
         options.exit().remove();
         if(config.style) select.style(config.style);
-        if(config.properties) merge(config.properties, options, ["base", "before", "style", "initial", "hook", /on.+/]);
+        merge(config, options, ["base", "before", "style", "initial", "hook", /on.+/]);
         return options
             .attr({
                 value: function(d) {
@@ -81,7 +81,9 @@
             function included(test){
                 return !exclude.some(function(p,i){return test.match(p)})
             }
-            for(var p in source) if(included(p) && target && !target.hasOwnProperty(p)) target[p] = source[p];
+            for(var p in source)
+                if(included(p) && target && !target.hasOwnProperty(p))
+                    Object.defineProperty(target, p, Object.getOwnPropertyDescriptor(source, p));
             return target;
         }
     }
