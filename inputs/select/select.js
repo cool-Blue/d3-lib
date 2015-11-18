@@ -16,7 +16,13 @@
         // add a select element on base with options matching data
         // if the text and value is the same then data is scalar array
         // 	otherwise the data elements must have text and value fields
-        //
+        // config
+        //  base
+        //  before
+        //  style
+        //  initial
+        //  hook
+        //  onX
         var select  = (config.base ?
                        (config.base.append ? config.base : d3.select(config.base)) :
                        d3.select("body"))
@@ -27,6 +33,7 @@
         options.enter().append("option");
         options.exit().remove();
         if(config.style) select.style(config.style);
+        if(config.properties) merge(config.properties, options, ["base", "before", "style", "initial", "hook", /on.+/]);
         return options
             .attr({
                 value: function(d) {
@@ -70,8 +77,16 @@
 
             });
         }
+        function merge(source, target, exclude) {
+            function included(test){
+                return !exclude.some(function(p,i){return test.match(p)})
+            }
+            for(var p in source) if(included(p) && target && !target.hasOwnProperty(p)) target[p] = source[p];
+            return target;
+        }
     }
-	//experiment with chaining...
+
+    //experiment with chaining...
 	d3.ui.select2 = function (base){
 		var _base, _on, _onUpdate, _data;
 		function select(){}

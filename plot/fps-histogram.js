@@ -3,7 +3,7 @@
     d3.ui = d3.ui || {};
 
     d3.ui.FpsMeter = function Histogram(on, style, config) {
-        var BINS = 60;
+        var BINS = 30;
         var _style   = merge({
                 "background-color": 'black',
                 display: "inline-block",
@@ -66,20 +66,22 @@
                 bars = plot.selectAll(".bar").data(h);
 
             bars.enter().append("rect")
-                .attr("class", "bar")
-                .attr({opactity: 1});
+                .attr({
+                    class: "bar",
+                    opactity: 1,
+                    width: function(d) {
+                        return x(d.dx)
+                    },
+                    x: function(d) {
+                        return x(d.x)
+                    }
+                });
 
             bars.exit().remove();
 
             bars.attr("height", function(d) {
                 return y(d.y)
-            })
-                .attr("width", function(d) {
-                    return x(d.dx)
-                })
-                .attr("x", function(d) {
-                    return x(d.x)
-                });
+            });
             xAxis.scale(x);
             xFill.call(xAxis);
             xLines.call(xAxis);
